@@ -2,6 +2,7 @@ package Application.Repository;
 
 import Application.Model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -77,13 +78,18 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * TODO: Retrieve a book by its title. You may assume that titles are unique and that a single Book entity should
      * be returned, so the return type will be Book.
      */
+    @Query(value = "SELECT * FROM Book WHERE title=?",nativeQuery = true)
+    Book findBookByTitle(String title);
 
     /**
      * TODO: Retrieve books by their availability using the field "available" in the class Book. The return type will be List<Book>.
      */
+    List<Book> findBooksByAvailable(boolean available);
 
     /**
      * TODO: Retrieve books by their dateAdded OR their lastDateWithdrawn.
      */
+    @Query("SELECT b FROM Book b WHERE b.dateAdded = ?1 OR b.lastDateWithdrawn = ?2")
+    List<Book> findBooksByDateAddedOrLastDateWithdrawn(Timestamp dateAdded, Timestamp lastDateWithdrawn);
 
 }
